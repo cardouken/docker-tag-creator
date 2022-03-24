@@ -1,15 +1,31 @@
 const core = require('@actions/core');
-const github = require('@actions/github');
 
 try {
-  // `who-to-greet` input defined in action metadata file
-  const nameToGreet = core.getInput('who-to-greet');
-  console.log(`Hello ${nameToGreet}!`);
-  const time = (new Date()).toTimeString();
-  core.setOutput("time", time);
-  // Get the JSON webhook payload for the event that triggered the workflow
-  const payload = JSON.stringify(github.context.payload, undefined, 2)
-  console.log(`The event payload: ${payload}`);
+    const registryUrl = core.getInput('registry_url', {required: false});
+    const dockerName = core.getInput('docker_name', {required: true});
+    const baseVersion = core.getInput('base_version', {required: true});
+    const tag = core.getInput('tag', {required: false});
+    const githubRef = core.getInput('tag', {required: true});
+    const useLatest = core.getInput('latest', {required: false});
+
+    let fullDockerName = `${registryUrl}/${dockerName}`;
+    let baseVersionTag = `${fullDockerName}:${baseVersion}`;
+    const fullVersionTag = `${baseVersionTag}.${tag}`;
+    if (useLatest === 'true') {
+        baseVersionTag = `${fullDockerName}:latest`;
+    } else {
+        baseVersionTag = `${fullDockerName}:${baseVersion}`;
+    }
+
+    let tags = [];
+    if (githubRef === 'refs/heads/main' || githubRef === 'refs/heads/master') {
+        tags.push(baseVersionTag);
+    } else {
+        tags.push(baseVersionTag);
+        tags.push(fullVersionTag);
+    }
+
+    core.setOutput("tags", tags);
 } catch (error) {
-  core.setFailed(error.message);
+    core.setFailed(error.message);
 }

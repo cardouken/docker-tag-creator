@@ -1,13 +1,31 @@
-name: 'Hello World'
-description: 'Greet someone and record the time'
+name: 'Albums Docker tags creator'
+description: 'Creates one or more Docker tags for build-push-action'
 inputs:
-  who-to-greet:  # id of input
-    description: 'Who to greet'
+  registry_url:
+    description: 'Container registry URL (e.g. ghcr.io)'
+    required: false
+    default: "ghcr.io"
+  docker_name:
+    description: 'Repository and name (e.g. fedora/http)'
     required: true
-    default: 'World'
+  base_version:
+    description: 'Base version (e.g. 17)'
+    required: true
+  tag:
+    description: 'Tag (e.g. latest or any other value like GH actions run number)'
+    required: false
+  github_ref:
+    description: "Github branch ref (if heads/main or heads/master, the output will only be one tag without the full version/tag)"
+    required: true
+  latest:
+    description: 'If true, main/master tags will be appended with latest'
+    required: false
+    default: 'false'
+
 outputs:
-  time: # id of output
-    description: 'The time we greeted you'
+  tags:
+    description: 'Concatenated tags as an array'
+
 runs:
   using: 'node12'
   main: 'index.js'
