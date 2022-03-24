@@ -25,7 +25,8 @@ try {
         tags.push(fullVersionTag);
     }
 
-    core.setOutput("tags", tags);
+    // join all tags with a comma
+    core.setOutput('tags', tags.join(','));
 } catch (error) {
     core.setFailed(error.message);
 }
