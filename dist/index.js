@@ -1689,7 +1689,7 @@ async function run() {
         const customTags = await getInputList('custom_tags') || `\n`;
 
         if (customTags.length > 0) {
-            core.setOutput('tags', customTags.join(','));
+            core.setOutput('tags', customTags.join('\n'));
             return;
         }
 
@@ -1708,8 +1708,7 @@ async function run() {
             tags.push(fullVersionTag);
         }
 
-        tags.filter(item => item).map(item => item.trim());
-        core.setOutput('tags', tags.join(','));
+        core.setOutput('tags', tags.join('\n'));
     } catch (error) {
         core.setFailed(error.message);
     }
