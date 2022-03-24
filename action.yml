@@ -21,6 +21,9 @@ inputs:
     description: 'If true, main/master tags will be appended with latest'
     required: false
     default: 'false'
+  custom_tags:
+    description: 'Custom tags to be created'
+    required: false
 
 outputs:
   tags:
