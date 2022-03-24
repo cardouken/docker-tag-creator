@@ -16,9 +16,6 @@ async function run() {
         }
 
         let tags = [];
-        if (customTags.length > 0) {
-            core.setOutput("tags", tags.join(','));
-        }
         let fullDockerName = `${registryUrl}/${dockerName}`;
         let baseVersionTag = `${fullDockerName}:${baseVersion}`;
 
@@ -33,6 +30,7 @@ async function run() {
             tags.push(fullVersionTag);
         }
 
+        tags.filter(item => item).map(item => item.trim());
         core.setOutput('tags', tags.join(','));
     } catch (error) {
         core.setFailed(error.message);

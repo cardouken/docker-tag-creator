@@ -8,22 +8,23 @@ Creates tags for use with docker/build-push-action@v2 depending on git refs.
 
 Following inputs can be used as `step.with` keys
 
-| Name           | Type    | Required | Description                                                                                                                             |
-|----------------|---------|----------|-----------------------------------------------------------------------------------------------------------------------------------------|
-| `registry_url` | String  | No       | Registry url (e.g. `ghcr.io`). Default `ghcr.io`                                                                                        |
-| `docker_name`  | String  | Yes      | Repository and name (e.g. `fedora/http`)                                                                                                |  
-| `base_version` | String  | Yes      | Base version (e.g. `3`)                                                                                                                 |
-| `github_ref`   | String  | Yes      | `{{ github.GITHUB_REF }}` - if `refs/heads/main` or `refs/heads/master`, only one tag with `:latest` or `:base_version` will be created |
-| `tag`          | String  | No       | Tag (e.g. `latest` or any other value such as `${{ github.RUN_ID }}`                                                                    |
-| `latest`       | Boolean | No       | true/false, if true, main/master tags will be appended with `latest`. Default `false`                                                   |
+| Name           | Type    | Description                                                                                                                             |
+|----------------|---------|-----------------------------------------------------------------------------------------------------------------------------------------|
+| `registry_url` | String  | Registry url (e.g. `ghcr.io`). Default `ghcr.io`                                                                                        |
+| `docker_name`  | String  | Repository and name (e.g. `fedora/http`)                                                                                                |  
+| `base_version` | String  | Base version (e.g. `3`)                                                                                                                 |
+| `github_ref`   | String  | `{{ github.GITHUB_REF }}` - if `refs/heads/main` or `refs/heads/master`, only one tag with `:latest` or `:base_version` will be created |
+| `tag`          | String  | Tag (e.g. `latest` or any other value such as `${{ github.RUN_ID }}`                                                                    |
+| `latest`       | Boolean | true/false, if true, main/master tags will be appended with `latest`. Default `false`                                                   |
+| `custom_tags`  | List    | Passes tags through as-is and returns the input. Ignores every other input. Use newlines to pass tags.                                  |
 
 ### Outputs
 
 Following outputs are available
 
-| Name       | Type   | Description                            |
-|------------|--------|----------------------------------------|
-| `tags`     | String | Comma-separated list of generated tags |
+| Name       | Type   | Description            |
+|------------|--------|------------------------|
+| `tags`     | String | List of generated tags |
 
  ---
 
@@ -91,3 +92,28 @@ steps:
 
 ````
 ghcr.io/fedora/http:3, ghcr.io/fedora/http:3.15
+````
+
+ ---
+
+### 4. Example usage with custom tags
+
+```yaml
+steps:
+  - name: Create Docker tags
+    id: create-tags
+    uses: actions/docker-tag-creator@main
+    with:
+      custom_tags: |
+       ghcr.io/fedora/http:1.0.0
+       ghcr.io/fedora/http:latest
+       fedora/http
+```
+
+#### Output example:
+
+````
+ghcr.io/fedora/http:1.0.0
+ghcr.io/fedora/http:latest
+fedora/http
+````
