@@ -22,9 +22,9 @@ Following inputs can be used as `step.with` keys
 
 Following outputs are available
 
-| Name       | Type   | Description            |
-|------------|--------|------------------------|
-| `tags`     | String | List of generated tags |
+| Name       | Type | Description            |
+|------------|------|------------------------|
+| `tags`     | List | List of generated tags |
 
  ---
 
@@ -46,7 +46,8 @@ steps:
 #### Output:
 
 ````
-ghcr.io/fedora/http:latest, ghcr.io/fedora/http:3.15
+ghcr.io/fedora/http:latest
+ghcr.io/fedora/http:3.15
 ````
 
  ---
@@ -91,7 +92,8 @@ steps:
 #### Output example:
 
 ````
-ghcr.io/fedora/http:3, ghcr.io/fedora/http:3.15
+ghcr.io/fedora/http:3
+ghcr.io/fedora/http:3.15
 ````
 
  ---
