@@ -1688,25 +1688,31 @@ async function run() {
         const useLatest = core.getInput('latest', {required: false});
         const customTags = await getInputList('custom_tags') || `\n`;
 
+        core.info("custom tags length" + customTags.length.toString());
         if (customTags.length > 0) {
             core.setOutput('tags', customTags.join('\n'));
             return;
         }
 
-        let tags = [];
-        let fullDockerName = `${registryUrl}/${dockerName}`;
+        const fullDockerName = `${registryUrl}/${dockerName}`;
         let baseVersionTag = `${fullDockerName}:${baseVersion}`;
-
         const fullVersionTag = `${baseVersionTag}.${tag}`;
-        if (useLatest === 'true') {
-            baseVersionTag = `${fullDockerName}:latest`;
+
+        const tags = [];
+        switch (githubRef) {
+            case 'refs/heads/main':
+            case 'refs/heads/master':
+                if (useLatest === 'true') {
+                    baseVersionTag = `${fullDockerName}:latest`;
+                }
+                break;
+            default:
+                tags.push(fullVersionTag);
+                break;
         }
-        if (githubRef === 'refs/heads/main' || githubRef === 'refs/heads/master') {
-            tags.push(baseVersionTag);
-        } else {
-            tags.push(baseVersionTag);
-            tags.push(fullVersionTag);
-        }
+
+        tags.push(baseVersionTag);
+        core.info("items in tags array:" + tags);
 
         core.setOutput('tags', tags.join('\n'));
     } catch (error) {
@@ -1717,16 +1723,19 @@ async function run() {
 function getInputList(name) {
     const res = [];
     const items = core.getInput(name, {required: false});
+    core.info("items from input:" + items);
     if (items === '') {
         return res;
     }
 
     const list = items.split(',');
+    core.info("items in list after split:" + list);
     for (const item of list) {
+        core.info("item in loop:" + item);
         res.push(item.trim());
     }
 
-    return res.filter(item => item).map(pat => pat.trim());
+    return res.filter(item => item).map(v => v.trim());
 }
 
 run().then(r => console.log(r)).catch(e => console.error(e));
