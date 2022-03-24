@@ -3,10 +3,10 @@ const core = require('@actions/core');
 async function run() {
     try {
         const registryUrl = core.getInput('registry_url', {required: false});
-        const dockerName = core.getInput('docker_name', {required: true});
-        const baseVersion = core.getInput('base_version', {required: true});
+        const dockerName = core.getInput('docker_name', {required: false});
+        const baseVersion = core.getInput('base_version', {required: false});
         const tag = core.getInput('tag', {required: false});
-        const githubRef = core.getInput('tag', {required: true});
+        const githubRef = core.getInput('tag', {required: false});
         const useLatest = core.getInput('latest', {required: false});
         const customTags = await getInputList('custom_tags') || `\n`;
 
