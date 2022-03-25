@@ -8,11 +8,15 @@ async function run() {
         const tag = core.getInput('tag', {required: false});
         const githubRef = core.getInput('tag', {required: false});
         const useLatest = core.getInput('latest', {required: false});
-        const customTags = await getInputList('custom_tags') || `\n`;
+        const customTags = core.getMultilineInput('custom_tags');
 
-        core.info("custom tags length" + customTags.length.toString());
+        core.info("custom tags length: " + customTags.length.toString());
         if (customTags.length > 0) {
-            core.setOutput('tags', customTags.join('\n'));
+            core.info("custom tags: " + customTags);
+            for (const customTag of customTags) {
+                core.info("custom tag: " + customTag);
+            }
+            core.setOutput('tags', customTags);
             return;
         }
 
@@ -34,7 +38,12 @@ async function run() {
         }
 
         tags.push(baseVersionTag);
-        core.info("items in tags array:" + tags);
+        core.info("items in tags array: " + tags);
+        for (const tag1 of tags) {
+            core.info("tag: " + tag1);
+        }
+
+        console.log(tags.join('\n'));
 
         core.setOutput('tags', tags.join('\n'));
     } catch (error) {
@@ -44,7 +53,7 @@ async function run() {
 
 function getInputList(name) {
     const res = [];
-    const items = core.getInput(name, {required: false});
+    const items = core.getMultilineInput(name, {required: false});
     core.info("items from input:" + items);
     if (items === '') {
         return res;
