@@ -1,4 +1,4 @@
-# Albums Docker tags creator
+# Docker tags creator
 
 Creates tags for use with docker/build-push-action@v2 depending on git refs.
 
